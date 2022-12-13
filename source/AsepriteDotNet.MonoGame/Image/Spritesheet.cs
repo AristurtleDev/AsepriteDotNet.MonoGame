@@ -49,6 +49,50 @@ public class Spritesheet
     public List<SpritesheetFrame> Frames { get; } = new();
 
     /// <summary>
+    ///     Initializes a new instance of the <see cref="Spritesheet"/> class.
+    /// </summary>
+    /// <param name="texture">
+    ///     The <see cref="Texture2D"/> that is being represented by this
+    ///     <see cref="Spritesheet"/>.
+    /// </param>
+    public Spritesheet(Texture2D texture) => Texture = texture;
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="Spritesheet"/> class.
+    /// </summary>
+    /// <param name="texture">
+    ///     The <see cref="Texture2D"/> that is being represented by this
+    ///     <see cref="Spritesheet"/>.
+    /// </param>
+    /// <param name="frames">
+    ///     A collection of <see cref="SpritesheetFrame"/> elements that define
+    ///     the frames within the <paramref name="texture"/>.
+    /// </param>
+    public Spritesheet(Texture2D texture, List<SpritesheetFrame> frames)
+        : this(texture) => Frames = frames;
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="Spritesheet"/> class.
+    /// </summary>
+    /// <param name="texture">
+    ///     The <see cref="Texture2D"/> that is being represented by this
+    ///     <see cref="Spritesheet"/>.
+    /// </param>
+    /// <param name="frames">
+    ///     A collection of <see cref="SpritesheetFrame"/> elements that define
+    ///     the frames within the <paramref name="texture"/>.
+    /// </param>
+    /// <param name="animations">
+    ///     A collection of <see cref="SpritesheetAnimation"/> elements that
+    ///     define animations for this <see cref="Spritesheet"/>.
+    /// </param>
+    public Spritesheet(Texture2D texture, List<SpritesheetFrame> frames, List<SpritesheetAnimation> animations)
+        : this(texture, frames)
+    {
+        AddAnimations(animations);
+    }
+
+    /// <summary>
     ///     Adds the given <see cref="SpritesheetAnimation"/> to this
     ///     <see cref="Spritesheet"/>.
     /// </summary>
