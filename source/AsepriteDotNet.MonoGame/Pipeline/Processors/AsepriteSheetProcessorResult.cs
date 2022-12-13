@@ -18,9 +18,18 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------------- */
+using Microsoft.Xna.Framework;
+
 namespace AsepriteDotNet.MonoGame.Pipeline.Processors;
 
 public sealed class AsepriteSheetProcessorResult
 {
+    /// <summary>
+    ///     Gets or Sets an <see cref="Array"/> of <see cref="Color"/> elements
+    ///     that represents the pixels for the spritesheet.
+    /// </summary>
+    public Color[] SpritesheetPixels { get; set; } = Array.Empty<Color>();
+
     
+
 }
