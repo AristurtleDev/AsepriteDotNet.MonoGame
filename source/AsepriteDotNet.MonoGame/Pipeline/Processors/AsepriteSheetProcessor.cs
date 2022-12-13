@@ -147,33 +147,43 @@ public sealed class AsepriteSheetProcessor : ContentProcessor<AsepriteFile, Asep
 
         AsepriteDotNet.Image.AsepriteSheet aseSheet = input.ToAsepriteSheet(sOptions, tOptions);
 
+        Color[] colorData = GetSpritesheetColorData(aseSheet);
+        List<SpritesheetFrame> frames = GetFrames(aseSheet);
+        
         Spritesheet spritesheet = CreateSpritesheet(aseSheet);
 
         return input.ToAsepriteSheet(sOptions, tOptions);
 
     }
 
-    private Spritesheet CreateSpritesheet(AsepriteDotNet.Image.AsepriteSheet aseSheet)
+
+    private Color[] GetSpritesheetColorData(AsepriteDotNet.Image.AsepriteSheet aseSheet)
     {
         //  Color values need to be translated from AsepriteDotNet color to 
         //  MonoGame color values
-        Color[] sheetPixels = new Color[aseSheet.Spritesheet.Pixels.Count];
+        Color[] colorData = new Color[aseSheet.Spritesheet.Pixels.Count];
 
-        for (int i = 0; i < sheetPixels.Length; i++)
+        for (int i = 0; i < colorData.Length; i++)
         {
             var pixel = aseSheet.Spritesheet.Pixels[i];
             if (PremultiplyAlpha)
             {
-                sheetPixels[i] = Color.FromNonPremultiplied(pixel.R, pixel.G, pixel.B, pixel.A);
+                colorData[i] = Color.FromNonPremultiplied(pixel.R, pixel.G, pixel.B, pixel.A);
             }
             else
             {
-                sheetPixels[i] = new Color(pixel.R, pixel.G, pixel.B, pixel.A);
+                colorData[i] = new Color(pixel.R, pixel.G, pixel.B, pixel.A);
             }
         }
 
-        //  Translate frame data
+        return colorData;
+    }
+
+    private List<SpritesheetFrame> GetFrames(AsepriteDotNet.Image.AsepriteSheet aseSheet)
+    {
         List<SpritesheetFrame> frames = new();
+
+
 
         foreach (var aseFrame in aseSheet.Spritesheet.Frames)
         {
@@ -198,6 +208,14 @@ public sealed class AsepriteSheetProcessor : ContentProcessor<AsepriteFile, Asep
 
                 slices.Add(new(name, bounds, center, pivot));
             }
+
+            SpritesheetFrame frame = new();
+            frame.AddSlices(slices);
+            frame.Duration = TimeSpan.FromMilliseconds(aseFrame.Duration);
+            frame.SourceRectangle = new Rectangle(aseFrame.SourceRectangle.X, aseFrame.SourceRectangle.Y, aseFrame.SourceRectangle.Width, aseFrame.SourceRectangle.Height);
+            frames.Add(frame);
         }
+
+        return frames;
     }
 }
