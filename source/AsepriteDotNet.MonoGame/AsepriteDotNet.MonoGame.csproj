@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AsepriteDotNet" Version="0.1.0">
+    <PackageReference Include="AsepriteDotNet" Version="0.2.1">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="MonoGame.Framework.Content.Pipeline" Version="3.8.1.303">
