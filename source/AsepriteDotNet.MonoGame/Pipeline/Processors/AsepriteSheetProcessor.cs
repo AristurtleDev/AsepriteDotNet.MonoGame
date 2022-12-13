@@ -20,13 +20,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------------- */
 using System.ComponentModel;
 
-using AsepriteDotNet.Image;
+// using AsepriteDotNet.Image;
+using AsepriteDotNet.MonoGame.Image;
 
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline;
 
 namespace AsepriteDotNet.MonoGame.Pipeline.Processors;
 
-public sealed class AsepriteSheetProcessor : ContentProcessor<AsepriteFile, AsepriteSheet>
+public sealed class AsepriteSheetProcessor : ContentProcessor<AsepriteFile, AsepriteDotNet.Image.AsepriteSheet>
 {
     /// <summary>
     ///     Gets or Sets the <see cref="PackingMethod"/> to use when generating
@@ -37,7 +39,14 @@ public sealed class AsepriteSheetProcessor : ContentProcessor<AsepriteFile, Asep
     ///     <see cref="Tilesheet"/> image data generation.
     /// </remarks>
     [DisplayName("Packing Method")]
-    public PackingMethod PackingMethod { get; set; } = PackingMethod.SquarePacked;
+    public AsepriteDotNet.Image.PackingMethod PackingMethod { get; set; } = AsepriteDotNet.Image.PackingMethod.SquarePacked;
+
+    /// <summary>
+    ///     Gets or Sets a value that indicates if color values should be 
+    ///     premultiplied.
+    /// </summary>
+    [DisplayName("Premultiply Alpha?")]
+    public bool PremultiplyAlpha { get; set; } = true;
 
     /// <summary>
     ///     Gets or Sets a value that indicates whether duplicate image data
@@ -114,10 +123,10 @@ public sealed class AsepriteSheetProcessor : ContentProcessor<AsepriteFile, Asep
     /// <returns>
     ///     A new <see cref="AsepriteSheet"/> class instance 
     /// </returns>
-    public AsepriteSheet Process(AsepriteFile input) => Process(input, null);
-    public override AsepriteSheet Process(AsepriteFile input, ContentProcessorContext? context)
+    public AsepriteDotNet.Image.AsepriteSheet Process(AsepriteFile input) => Process(input, null);
+    public override AsepriteDotNet.Image.AsepriteSheet Process(AsepriteFile input, ContentProcessorContext? context)
     {
-        SpritesheetOptions sOptions = new()
+        AsepriteDotNet.Image.SpritesheetOptions sOptions = new()
         {
             OnlyVisibleLayers = OnlyVisibleLayers,
             MergeDuplicates = MergeDuplicates,
@@ -127,7 +136,7 @@ public sealed class AsepriteSheetProcessor : ContentProcessor<AsepriteFile, Asep
             InnerPadding = InnerPadding
         };
 
-        TilesheetOptions tOptions = new()
+        AsepriteDotNet.Image.TilesheetOptions tOptions = new()
         {
             MergeDuplicates = MergeDuplicates,
             PackingMethod = PackingMethod,
@@ -136,6 +145,59 @@ public sealed class AsepriteSheetProcessor : ContentProcessor<AsepriteFile, Asep
             InnerPadding = InnerPadding
         };
 
+        AsepriteDotNet.Image.AsepriteSheet aseSheet = input.ToAsepriteSheet(sOptions, tOptions);
+
+        Spritesheet spritesheet = CreateSpritesheet(aseSheet);
+
         return input.ToAsepriteSheet(sOptions, tOptions);
+
+    }
+
+    private Spritesheet CreateSpritesheet(AsepriteDotNet.Image.AsepriteSheet aseSheet)
+    {
+        //  Color values need to be translated from AsepriteDotNet color to 
+        //  MonoGame color values
+        Color[] sheetPixels = new Color[aseSheet.Spritesheet.Pixels.Count];
+
+        for (int i = 0; i < sheetPixels.Length; i++)
+        {
+            var pixel = aseSheet.Spritesheet.Pixels[i];
+            if (PremultiplyAlpha)
+            {
+                sheetPixels[i] = Color.FromNonPremultiplied(pixel.R, pixel.G, pixel.B, pixel.A);
+            }
+            else
+            {
+                sheetPixels[i] = new Color(pixel.R, pixel.G, pixel.B, pixel.A);
+            }
+        }
+
+        //  Translate frame data
+        List<SpritesheetFrame> frames = new();
+
+        foreach (var aseFrame in aseSheet.Spritesheet.Frames)
+        {
+            List<FrameSlice> slices = new();
+
+            foreach (var aseSlice in aseFrame.GetSlices())
+            {
+                string name = aseSlice.Name;
+                Rectangle bounds = new Rectangle(aseSlice.Bounds.X, aseSlice.Bounds.Y, aseSlice.Bounds.Width, aseSlice.Bounds.Height);
+
+                Rectangle? center = default;
+                if (aseSlice.CenterBounds is not null)
+                {
+                    center = new Rectangle(aseSlice.CenterBounds.Value.X, aseSlice.CenterBounds.Value.Y, aseSlice.CenterBounds.Value.Width, aseSlice.CenterBounds.Value.Height);
+                }
+
+                Point? pivot = default;
+                if (aseSlice.Pivot is not null)
+                {
+                    pivot = new Point(aseSlice.Pivot.Value.X, aseSlice.Pivot.Value.Y);
+                }
+
+                slices.Add(new(name, bounds, center, pivot));
+            }
+        }
     }
 }
