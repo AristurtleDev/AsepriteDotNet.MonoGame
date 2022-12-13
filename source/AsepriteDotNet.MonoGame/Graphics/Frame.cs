@@ -20,41 +20,56 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------------- */
 using Microsoft.Xna.Framework;
 
-namespace AsepriteDotNet.MonoGame.Image;
+namespace AsepriteDotNet.MonoGame.Graphics;
 
 /// <summary>
-///     Represents a frame within a <see cref="Spritesheet"/>.
+///     Represents a frame within a <see cref="Atlas"/>.
 /// </summary>
-public class SpritesheetFrame
+public class Frame
 {
-    private Dictionary<string, List<FrameSlice>> _sliceLookup = new();
+    private Dictionary<string, List<Slice>> _sliceLookup = new();
 
     /// <summary>
-    ///     Gets or Sets the bounds of this <see cref="SpritesheetFrame"/>
-    ///     within the <see cref="Spritesheet"/>.
+    ///     Gets or Sets the bounds of this <see cref="Frame"/> within the 
+    ///     <see cref="Atlas"/>.
     /// </summary>
     public Rectangle SourceRectangle { get; set; } = Rectangle.Empty;
 
     /// <summary>
-    ///     Gets the duration of this <see cref="SpritesheetFrame"/> when used
-    ///     in an animation.
+    ///     Gets the duration of this <see cref="Frame"/> when used in an 
+    ///     animation.
     /// </summary>
     public TimeSpan Duration { get; set; } = TimeSpan.Zero;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="SpritesheetFrame"/>
-    ///     class.
+    ///     Initializes a new instance of the <see cref="Frame"/> class.
     /// </summary>
-    public SpritesheetFrame() { }
+    /// <param name="sourceRectangle">
+    ///     The bounds of this <see cref="Frame"/> within a 
+    ///     <see cref="Atlas"/>.
+    /// </param>
+    public Frame(Rectangle sourceRectangle) => SourceRectangle = sourceRectangle;
 
     /// <summary>
-    ///     Adds the given <see cref="FrameSlice"/> to this
-    ///     <see cref="SpritesheetFrame"/>.
+    ///     Initializes a new instance of the <see cref="Frame"/> class.
+    /// </summary>
+    /// <param name="sourceRectangle">
+    ///     The bounds of this <see cref="Frame"/> within a 
+    ///     <see cref="Atlas"/>.
+    /// </param>
+    /// <param name="duration">
+    ///     THe duration of this <see cref="Frame"/> when used in an animation.
+    /// </param>
+    public Frame(Rectangle sourceRectangle, TimeSpan duration)
+        : this(sourceRectangle) => Duration = duration;
+
+    /// <summary>
+    ///     Adds the given <see cref="Slice"/> to this <see cref="Frame"/>.
     /// </summary>
     /// <param name="slice">
-    ///     The <see cref="FrameSlice"/> to add.
+    ///     The <see cref="Slice"/> to add.
     /// </param>
-    public void AddSlice(FrameSlice slice)
+    public void AddSlice(Slice slice)
     {
         if (_sliceLookup.ContainsKey(slice.Name))
         {
@@ -62,38 +77,38 @@ public class SpritesheetFrame
         }
         else
         {
-            _sliceLookup.Add(slice.Name, new List<FrameSlice>() { slice });
+            _sliceLookup.Add(slice.Name, new List<Slice>() { slice });
         }
     }
 
     /// <summary>
-    ///     Adds each <see cref="FrameSlice"/> element in the given collection
-    ///     to this <see cref="SpritesheetFrame"/>.
+    ///     Adds each <see cref="Slice"/> element in the given collection
+    ///     to this <see cref="Frame"/>.
     /// </summary>
     /// <param name="slices">
-    ///     The collection containing the <see cref="FrameSlice"/> elements to
+    ///     The collection containing the <see cref="Slice"/> elements to
     ///     add.
     /// </param>
-    public void AddSlices(IEnumerable<FrameSlice> slices)
+    public void AddSlices(IEnumerable<Slice> slices)
     {
-        foreach (FrameSlice slice in slices)
+        foreach (Slice slice in slices)
         {
             AddSlice(slice);
         }
     }
 
     /// <summary>
-    ///     Removes the given <see cref="FrameSlice"/> element from this
-    ///     <see cref="SpritesheetFrame"/>.
+    ///     Removes the given <see cref="Slice"/> element from this
+    ///     <see cref="Frame"/>.
     /// </summary>
     /// <param name="slice">
-    ///     The <see cref="FrameSlice"/> element to remove.
+    ///     The <see cref="Slice"/> element to remove.
     /// </param>
-    public void RemoveSlice(FrameSlice slice)
+    public void RemoveSlice(Slice slice)
     {
         if (_sliceLookup.ContainsKey(slice.Name))
         {
-            List<FrameSlice> frameSlices = _sliceLookup[slice.Name];
+            List<Slice> frameSlices = _sliceLookup[slice.Name];
             frameSlices.Remove(slice);
 
             if (frameSlices.Count == 0)
@@ -104,38 +119,38 @@ public class SpritesheetFrame
     }
 
     /// <summary>
-    ///     Removes all <see cref="FrameSlice"/> elements with the specified
-    ///     <paramref name="name"/> from this <see cref="SpritesheetFrame"/>.
+    ///     Removes all <see cref="Slice"/> elements with the specified
+    ///     <paramref name="name"/> from this <see cref="Frame"/>.
     /// </summary>
     /// <param name="name"></param>
     public void RemoveSlicesByName(string name) => _sliceLookup.Remove(name);
 
     /// <summary>
-    ///     Removes each <see cref="FrameSlice"/> element in the given
-    ///     collection from this <see cref="SpritesheetFrame"/>.
+    ///     Removes each <see cref="Slice"/> element in the given
+    ///     collection from this <see cref="Frame"/>.
     /// </summary>
     /// <param name="slices">
-    ///     The collection of <see cref="FrameSlice"/> elements to remove.
+    ///     The collection of <see cref="Slice"/> elements to remove.
     /// </param>
-    public void RemoveSlices(IEnumerable<FrameSlice> slices)
+    public void RemoveSlices(IEnumerable<Slice> slices)
     {
-        foreach (FrameSlice slice in slices)
+        foreach (Slice slice in slices)
         {
             RemoveSlice(slice);
         }
     }
 
     /// <summary>
-    ///     Returns a new collection of all <see cref="FrameSlice"/> elements
-    ///     from this <see cref="SpritesheetFrame"/>.
+    ///     Returns a new collection of all <see cref="Slice"/> elements
+    ///     from this <see cref="Frame"/>.
     /// </summary>
     /// <returns>
-    ///     A new collection of all <see cref="FrameSlice"/> elements from this 
-    ///     <see cref="SpritesheetFrame"/>.
+    ///     A new collection of all <see cref="Slice"/> elements from this 
+    ///     <see cref="Frame"/>.
     /// </returns>
-    public List<FrameSlice> GetAllSlices()
+    public List<Slice> GetAllSlices()
     {
-        List<FrameSlice> slices = new();
+        List<Slice> slices = new();
 
         foreach (var slice in _sliceLookup)
         {
@@ -146,56 +161,56 @@ public class SpritesheetFrame
     }
 
     /// <summary>
-    ///     Returns a new collection of all <see cref="FrameSlice"/> elements
+    ///     Returns a new collection of all <see cref="Slice"/> elements
     ///     with the specified <paramref name="name"/> from this
-    ///     <see cref="SpritesheetFrame"/>.
+    ///     <see cref="Frame"/>.
     /// </summary>
     /// <param name="name">
-    ///     The name of the <see cref="FrameSlice"/> elements to return.
+    ///     The name of the <see cref="Slice"/> elements to return.
     /// </param>
     /// <returns>
-    ///     A new collection of all <see cref="FrameSlice"/> elements with the
+    ///     A new collection of all <see cref="Slice"/> elements with the
     ///     specified <paramref name="name"/> from this 
-    ///     <see cref="SpritesheetFrame"/>.
+    ///     <see cref="Frame"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     ///     Thrown if the specified <paramref name="name"/> is
     ///     <see langword="null"/> or an empty string.
     /// </exception>
-    public List<FrameSlice> GetSlicesByName(string name)
+    public List<Slice> GetSlicesByName(string name)
     {
         if (string.IsNullOrEmpty(name))
         {
             throw new ArgumentNullException(nameof(name), $"{nameof(name)} cannot be null or an empty string");
         }
 
-        if (_sliceLookup.TryGetValue(name, out List<FrameSlice>? slices))
+        if (_sliceLookup.TryGetValue(name, out List<Slice>? slices))
         {
             return slices;
         }
 
-        return new List<FrameSlice>();
+        return new List<Slice>();
     }
 
     /// <summary>
-    ///     Returns the first occurrence of a <see cref="FrameSlice"/> element
+    ///     Returns the first occurrence of a <see cref="Slice"/> element
     ///     with the specified <paramref name="name"/> from this
-    ///     <see cref="SpritesheetFrame"/>.
+    ///     <see cref="Frame"/>.
     /// </summary>
     /// <param name="name">
-    ///     The name of the <see cref="FrameSlice"/> element to return.
+    ///     The name of the <see cref="Slice"/> element to return.
     /// </param>
     /// <returns>
-    ///     The first occurrence of a <see cref="FrameSlice"/> element with the
+    ///     The first occurrence of a <see cref="Slice"/> element with the
     ///     specified <paramref name="name"/> from this
-    ///     <see cref="Spritesheet"/>, if one is found; otherwise, 
+    ///     <see cref="Atlas"/>, if one is found; otherwise, 
     ///     <see langword="null"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
     ///     Thrown if the specified <paramref name="name"/> is
     ///     <see langword="null"/> or an empty string.
     /// </exception>
-    public FrameSlice? GetFirstSliceWithName(string name)
+    public Slice? GetFirstSliceWithName(string name)
     {
         if (string.IsNullOrEmpty(name))
         {

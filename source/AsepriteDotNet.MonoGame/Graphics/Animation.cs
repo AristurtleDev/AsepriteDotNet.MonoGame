@@ -18,93 +18,88 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ----------------------------------------------------------------------------- */
-namespace AsepriteDotNet.MonoGame.Image;
+namespace AsepriteDotNet.MonoGame.Graphics;
 
-public class SpritesheetAnimation
+public class Animation
 {
     /// <summary>
-    ///     Gets the collection of the <see cref="SpritesheetFrame"/> elements
-    ///     that make up this <see cref="SpritesheetAnimation"/> in order from
-    ///     start to end.
+    ///     Gets the collection of the <see cref="Frame"/> elements that make up
+    ///     this <see cref="Animation"/> in order from start to end.
     /// </summary>
-    public List<SpritesheetFrame> Frames { get; } = new();
+    public List<Frame> Frames { get; } = new();
 
     /// <summary>
-    ///     Gets or Sets the name of this <see cref="SpritesheetAnimation"/>.
+    ///     Gets or Sets the name of this <see cref="Animation"/>.
     /// </summary>
     public string Name { get; set; }
 
     /// <summary>
     ///     Gets or Sets the <see cref="AnimationDirection"/> that should be
-    ///     used when using this <see cref="SpritesheetAnimation"/>.
+    ///     used when using this <see cref="Animation"/>.
     /// </summary>
     public AnimationDirection Direction { get; set; } = AnimationDirection.Forward;
 
     /// <summary>
-    ///     Gets or Sets a value that indicates whether this
-    ///     <see cref="SpritesheetAnimation"/> loops.
+    ///     Gets or Sets a value that indicates whether this 
+    ///     <see cref="Animation"/> loops.
     /// </summary>
     public bool IsLooping { get; set; } = true;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="SpritesheetAnimation"/>
-    ///     class.
+    ///     Initializes a new instance of the <see cref="Animation"/> class.
     /// </summary>
     /// <param name="name">
-    ///     The name of this <see cref="SpritesheetAnimation"/>.
+    ///     The name of this <see cref="Animation"/>.
     /// </param>
-    public SpritesheetAnimation(string name) => Name = name;
+    public Animation(string name) => Name = name;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="SpritesheetAnimation"/>
-    ///     class.
+    ///     Initializes a new instance of the <see cref="Animation"/> class.
     /// </summary>
     /// <param name="name">
-    ///     The name of this <see cref="SpritesheetAnimation"/>.
+    ///     The name of this <see cref="Animation"/>.
     /// </param>
     /// <param name="frames">
-    ///     The <see cref="SpritesheetFrame"/> elements that make up this
-    ///     <see cref="SpritesheetAnimation"/>, in order from start to end.
+    ///     The <see cref="Frame"/> elements that make up this
+    ///     <see cref="Animation"/>, in order from start to end.
     /// </param>
-    public SpritesheetAnimation(string name, List<SpritesheetFrame> frames)
+    public Animation(string name, List<Frame> frames)
         : this(name) => Frames = frames;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="SpritesheetAnimation"/>
-    ///     class.
+    ///     Initializes a new instance of the <see cref="Animation"/> class.
     /// </summary>
     /// <param name="name">
-    ///     The name of this <see cref="SpritesheetAnimation"/>.
+    ///     The name of this <see cref="Animation"/>.
     /// </param>
     /// <param name="frames">
-    ///     The <see cref="SpritesheetFrame"/> elements that make up this
-    ///     <see cref="SpritesheetAnimation"/>, in order from start to end.
+    ///     The <see cref="Frame"/> elements that make up this
+    ///     <see cref="Animation"/>, in order from start to end.
     /// </param>
     /// <param name="direction">
     ///     The <see cref="AnimationDirection"/> that should be used when using
-    ///     this <see cref="SpritesheetAnimation"/>.
+    ///     this <see cref="Animation"/>.
     /// </param>
-    public SpritesheetAnimation(string name, List<SpritesheetFrame> frames, AnimationDirection direction)
+    public Animation(string name, List<Frame> frames, AnimationDirection direction)
         : this(name, frames) => Direction = direction;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="SpritesheetAnimation"/>
-    ///     class.
+    ///     Initializes a new instance of the <see cref="Animation"/> class.
     /// </summary>
     /// <param name="name">
-    ///     The name of this <see cref="SpritesheetAnimation"/>.
+    ///     The name of this <see cref="Animation"/>.
     /// </param>
     /// <param name="frames">
-    ///     The <see cref="SpritesheetFrame"/> elements that make up this
-    ///     <see cref="SpritesheetAnimation"/>, in order from start to end.
+    ///     The <see cref="Frame"/> elements that make up this
+    ///     <see cref="Animation"/>, in order from start to end.
     /// </param>
     /// <param name="direction">
     ///     The <see cref="AnimationDirection"/> that should be used when using
-    ///     this <see cref="SpritesheetAnimation"/>.
+    ///     this <see cref="Animation"/>.
     /// </param>
     /// <param name="isLooping">
-    ///     Whether this <see cref="SpritesheetAnimation"/> should loop.
+    ///     Whether this <see cref="Animation"/> should loop.
     /// </param>
-    public SpritesheetAnimation(string name, List<SpritesheetFrame> frames, AnimationDirection direction, bool isLooping)
+    public Animation(string name, List<Frame> frames, AnimationDirection direction, bool isLooping)
         : this(name, frames, direction) => IsLooping = isLooping;
 }
