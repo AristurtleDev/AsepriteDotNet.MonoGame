@@ -25,6 +25,7 @@ using Microsoft.Xna.Framework.Content.Pipeline;
 
 namespace AsepriteDotNet.MonoGame.Pipeline.Importers;
 
+[ContentImporter(".ase", ".aseprite", DisplayName = "Aseprite File Importer", DefaultProcessor = "AsepriteSheetProcessor")]
 public sealed class AsepriteFileImporter : ContentImporter<AsepriteFile>
 {
     public AsepriteFile Import(string fileName) => Import(fileName, null);
